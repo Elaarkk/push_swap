@@ -70,14 +70,12 @@ Cela générera l'exécutable ````push_swap````.
 
 Le programme peut prendre les nombres en argument de deux manières:
 
-- 1. En tant qu'arguments multiples:
+1. En tant qu'arguments multiples:
 
 ```bash
 ./push_swap 2 1 3 6 5 8
 ```
-- 2. En tant qu'arguments multiples:
-
-En tant que chaîne de caractères unique (les nombres séparés par des espaces):
+2. En tant que chaîne de caractères unique (les nombres séparés par des espaces) :
 
 ````bash
 ./push_swap "2 1 3 6 5 8"
