@@ -1,84 +1,73 @@
 # Push_Swap
 
-Ce projet est un algorithme de tri réalisé dans le cadre du cursus de l'École 42. L'objectif est de trier une pile d'entiers, donnée en argument, en utilisant le moins d'opérations de "swap" possible, à l'aide de deux piles (stack A et stack B).
+This project is a sorting algorithm created as part of the 42 School curriculum. The goal is to sort a stack of integers, given as arguments, using the fewest possible "swap" operations, with the help of two stacks (stack A and stack B).
 
-La pile A est initialisée avec les nombres fournis en argument. La pile B est initialement vide et sert d'espace de manœuvre.
+Stack A is initialized with the numbers provided as arguments. Stack B is initially empty and serves as a working space.
 
-## Opérations autorisées
+## Allowed Operations
 
-Le tri doit être effectué en n'utilisant que les opérations suivantes :
+The sort must be performed using only the following operations:
 
-- sa (swap a) : Intervertit les 2 premiers éléments au sommet de la pile a.
+- `sa` (swap a): Swaps the first 2 elements at the top of stack a.
+- `sb` (swap b): Swaps the first 2 elements at the top of stack b.
+- `ss`: `sa` and `sb` at the same time.
+- `pa` (push a): Takes the first element at the top of b and puts it on a.
+- `pb` (push b): Takes the first element at the top of a and puts it on b.
+- `ra` (rotate a): Shifts up all elements of stack a by one position (the first element becomes the last).
+- `rb` (rotate b): Shifts up all elements of stack b by one position (the first element becomes the last).
+- `rr`: `ra` and `rb` at the same time.
+- `rra` (reverse rotate a): Shifts down all elements of stack a by one position (the last element becomes the first).
+- `rrb` (reverse rotate b): Shifts down all elements of stack b by one position (the last element becomes the first).
+- `rrr`: `rra` and `rrb` at the same time.
 
-- sb (swap b) : Intervertit les 2 premiers éléments au sommet de la pile b.
+## Algorithm
 
-- ss : sa et sb en même temps.
+The algorithm used in this project is designed to be efficient and optimized to reduce the number of instructions. It is inspired by the "Turkish" algorithm (cf. https://medium.com/@ayogun/push-swap-c1f5d2d41e97)
 
-- pa (push a) : Prend le premier élément au sommet de b et le met sur a.
+**Error Handling:** The program first checks if the arguments are valid (only numbers, no duplicates, no integer overflow).
 
-- pb (push b) : Prend le premier élément au sommet de a et le met sur b.
+**Sort for 3 numbers:** If stack A contains only 3 numbers, a specific sort (`sort_three`) is applied to sort them in a minimum number of moves.
 
-- ra (rotate a) : Décale d'une position vers le haut tous les éléments de la pile a (le premier devient le dernier).
+### Main Algorithm (for N > 3):
 
-- rb (rotate b) : Décale d'une position vers le haut tous les éléments de la pile b.
+Two elements are first pushed from A to B to initialize stack B.
 
-- rr : ra et rb en même temps.
+As long as there are more than 3 elements in A, the program enters an optimization loop:
 
-- rra (reverse rotate a) : Décale d'une position vers le bas tous les éléments de la pile a (le dernier devient le premier).
+**Cost Analysis:** For each element in A, the algorithm calculates its "target" in B and the "cost" in operations (`ra`, `rb`, `rr`, `rra`, `rrb`, `rrr`) to bring this element and its target to the top of their respective stacks.
 
-- rrb (reverse rotate b) : Décale d'une position vers le bas tous les éléments de la pile b.
+**Best Move:** The element with the lowest cost (`is_good_one`) is identified.
 
-- rrr : rra et rrb en même temps.
+**Execution:** The calculated rotations are performed, and the element is pushed from A to B (`pb`).
 
-## Algoritme
+Once A is reduced to 3 elements, `sort_three` is applied to A.
 
-L'algorithme utilisé dans ce projet est conçu pour être efficace et optimisé afin de réduire le nombre d'instructions. Il est inspiré de l'algorithme "turc" (cf. https://medium.com/@ayogun/push-swap-c1f5d2d41e97)
+**Return to A:** The elements are then moved back from B to A. The algorithm identifies the correct target in A for each element in B and performs the necessary rotations before "pushing" (`pa`).
 
-**Gestion des erreurs:** Le programme vérifie en amont si les arguments sont valides (uniquement des nombres, pas de doublons, pas de dépassement de la limite int).
+**Finalization:** Stack A is finally rotated (`rra`) until the smallest number is at the top, ensuring it is perfectly sorted.
 
-**Tri pour 3 nombres:** Si la pile A ne contient que 3 nombres, un tri spécifique (sort_three) est appliqué pour les trier en un minimum de coups.
+## Compilation and Usage
 
-##### Algorithme principal (pour N > 3) :
-
-Deux éléments sont d'abord poussés de A vers B pour initialiser la pile B.
-
-Tant qu'il y a plus de 3 éléments dans A, le programme entre dans une boucle d'optimisation :
-
-**Analyse des coûts:** Pour chaque élément de A, l'algorithme calcule sa "cible" (target) dans B et le "coût" en opérations (ra, rb, rr, rra, rrb, rrr) pour amener cet élément et sa cible au sommet de leurs piles respectives.
-
-**Meilleur coup:** L'élément avec le coût le plus faible (is_good_one) est identifié.
-
-**Exécution:** Les rotations calculées sont effectuées, et l'élément est poussé de A vers B (pb).
-
-Une fois A réduit à 3 éléments, le sort_three est appliqué sur A.
-
-**Retour vers A:** Les éléments sont ensuite rapatriés de B vers A. L'algorithme identifie la cible correcte dans A pour chaque élément de B et effectue les rotations nécessaires avant de "pousser" (pa).
-
-**Finalisation:** La pile A est finalement tournée (rra) jusqu'à ce que le plus petit nombre soit au sommet, garantissant qu'elle est parfaitement triée.
-
-## Compilation et Utilisation
-
-Pour compiler, utilisez le ````Makefile```` fourni:
+To compile, use the provided `Makefile`:
 
 ```bash
 make
-```
+````
 
-Cela générera l'exécutable ````push_swap````.
+### Running the program:
 
-## Exécuter le programme
+The program can take numbers as arguments in two ways:
 
-Le programme peut prendre les nombres en argument de deux manières:
+1. As multiple arguments:
 
-1. En tant qu'arguments multiples:
-
-```bash
+````bash
 ./push_swap 2 1 3 6 5 8
-```
-2. En tant que chaîne de caractères unique (les nombres séparés par des espaces) :
+````
+
+2. As a single string (numbers separated by spaces):
 
 ````bash
 ./push_swap "2 1 3 6 5 8"
 ````
 
-Le programme affichera sur la sortie standard la liste des opérations à effectuer.
+The program will output the list of operations to perform to standard output.
